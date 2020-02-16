@@ -18,9 +18,6 @@ namespace Collections
             lst.Add(2);
             lst.Add(22);
             lst.Add(222);
-            //lst.AddToStart(3);
-
-            //lst.RemoveAt(lst.Count-1);
 
 
 
