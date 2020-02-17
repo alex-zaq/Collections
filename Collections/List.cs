@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Collections
 {
-    class List<T> : IEnumerable<T>, IEnumerator<T>,IList<T>
+    class List<T> : IEnumerable<T>, IEnumerator<T>,IList<T>,ICollection<T>,ICollection,IList
     {
 
 
@@ -31,6 +31,14 @@ namespace Collections
         object IEnumerator.Current => this.current.data;
 
         public bool IsReadOnly => false;
+
+        public object SyncRoot => throw new NotImplementedException();
+
+        public bool IsSynchronized => false;
+
+        public bool IsFixedSize => throw new NotImplementedException();
+
+        object IList.this[int index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public T this[int index]
         {
@@ -129,7 +137,27 @@ namespace Collections
 
         }
 
+        private int IndexByElement(Element elem)
+        {
+            int pos = 0;
+            Element current = start;
 
+            while (elem!=current)
+            {
+
+                if (elem==current)
+                {
+                    return pos;
+                }
+
+                pos++;
+
+            }
+
+            return -1;
+
+
+        }
 
         public void Add(T value)
         {
@@ -311,7 +339,18 @@ namespace Collections
 
         public IEnumerator<T> GetEnumerator()
         {
-            return this;
+            //return this;
+
+            Element current = start;
+
+            while (current!=null)
+            {
+                yield return current.data;
+                current = current.next;
+
+            }
+
+
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -404,6 +443,51 @@ namespace Collections
         public void Dispose()
         {
 
+        }
+
+        public void CopyTo(Array array, int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int Add(object value)
+        {
+            Add((T)value);
+            return IndexByElement(end);
+
+        }
+
+        public bool Contains(object value)
+        {
+           return Contains((T)value);
+        }
+
+        public int IndexOf(object value)
+        {
+            if (value is T)
+            {
+                return IndexOf((T)value);
+
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        public void Insert(int index, object value)
+        {
+            Insert(index, (T)value);
+        }
+
+        public void Remove(object value)
+        {
+            Remove((T)value);
+        }
+
+        void IList.RemoveAt(int index)
+        {
+            RemoveAt(index);
         }
     }
 
